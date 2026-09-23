@@ -1,0 +1,19 @@
+name: lint
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Shell scripts
+        run: shellcheck scripts/*.sh
+      - name: Targets file
+        run: jq -e 'type == "array" and all(.[]; has("name") and has("host") and has("port"))' targets.json
